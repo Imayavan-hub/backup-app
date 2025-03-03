@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #ece9e6, #ffffff);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  h1 {
+    color: #333;
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+
+  form {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 350px;
+    text-align: center;
+  }
+
+  label {
+    font-weight: bold;
+    margin-top: 15px;
+    display: block;
+    color: #555;
+  }
+
+  input[type="file"] {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+
+  button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+  }
+
+  li {
+    background: #ffdddd;
+    margin: 5px 0;
+    padding: 10px;
+    border-left: 5px solid #f44336;
+    border-radius: 5px;
+  }
+</style>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Backup System</title>
+<script>
+    function addSourceInput() {
+        const container = document.getElementById('source-container');
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.webkitdirectory = true;
+        input.name = 'source_dirs';
+        container.appendChild(input);
+    }
+</script>
+</head>
+<body>
+<h1>Backup System</h1>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<form action="{{ url_for('backup') }}" method="post">
+    <div id="source-container">
+        <label>Select Source Directories:</label><br>
+        <input type="file" webkitdirectory name="source_dirs"><br>
+    </div>
+    <button type="button" onclick="addSourceInput()">Add Another Source Directory</button><br><br>
+
+    <label>Select Backup Destination Directory:</label><br>
+    <input type="file" webkitdirectory name="backup_dir"><br><br>
+
+    <button type="submit">Start Backup</button>
+</form>
+
+</body>
+</html>
+

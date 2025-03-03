@@ -1,12 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from backup import backup_files
+import os
 
 app = Flask(__name__)
-app.secret_key = 'supersecretkey'  # For session management
-
-# Default directories (modify as needed)
-SOURCE_DIR = '/home/imayavan/Downloads/blender-4.3.2-linux-x64'
-BACKUP_DIR = '/home/imayavan/backup folder'
+app.secret_key = 'supersecretkey' 
 
 @app.route('/')
 def index():
@@ -14,8 +11,20 @@ def index():
 
 @app.route('/backup', methods=['POST'])
 def backup():
-    result = backup_files(SOURCE_DIR, BACKUP_DIR)
-    flash(result)
+    source_dirs = request.form.getlist('source_dirs')
+    backup_dir = request.form.get('backup_dir')
+
+    if not source_dirs or not backup_dir:
+        flash("Please select both source and backup directories.")
+        return redirect(url_for('index'))
+
+    results = []
+    for source_dir in source_dirs:
+        result = backup_files(source_dir, backup_dir)
+        results.append(result)
+
+    for res in results:
+        flash(res)
     return redirect(url_for('index'))
 
 @app.route('/test')
